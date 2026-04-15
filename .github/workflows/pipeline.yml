@@ -38,16 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Debug variables
-        run: |
-          echo "Longitud de Access Key: ${#AWS_ACCESS_KEY_ID}"
-          if [ ${#AWS_ACCESS_KEY_ID} -lt 10 ]; then
-            echo "Error: La clave es demasiado corta o no se cargó"
-          fi
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-
-      - name: Deploy a S3 (dev)
+      - name: Deploy a S3
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --delete
@@ -55,6 +46,7 @@ jobs:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           SOURCE_DIR: .
 
   deploy-staging:
@@ -66,7 +58,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy a S3 (staging)
+      - name: Deploy a S3
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --delete
@@ -74,6 +66,7 @@ jobs:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           SOURCE_DIR: .
 
   deploy-production:
@@ -85,7 +78,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy a S3 (production)
+      - name: Deploy a S3
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --delete
@@ -93,4 +86,5 @@ jobs:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           SOURCE_DIR: .
